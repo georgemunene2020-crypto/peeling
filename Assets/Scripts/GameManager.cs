@@ -69,6 +69,8 @@ public class GameManager : MonoBehaviour
     public GameObject gameOverPanel;
     public GameObject pausePanel;
     public TextMeshProUGUI gameOverTitleText;
+    public TextMeshProUGUI gameOverScoreText;
+    public TextMeshProUGUI gameOverHighScoreText;
 
     private bool _isGameOver = false;
     private bool _isPaused   = false;
@@ -172,8 +174,15 @@ public class GameManager : MonoBehaviour
                 gameOverPanel = goPanelTr.gameObject;
                 gameOverPanel.SetActive(false);
 
-                Transform goTitleTr = goPanelTr.Find("GameOver_Title");
+                Transform goTitleTr = goPanelTr.Find("GameOver_Window/GameOver_Title");
                 if (goTitleTr != null) gameOverTitleText = goTitleTr.GetComponent<TextMeshProUGUI>();
+
+                Transform goScoreTr = goPanelTr.Find("GameOver_Window/Score_Text");
+                if (goScoreTr != null) gameOverScoreText = goScoreTr.GetComponent<TextMeshProUGUI>();
+
+                Transform goHighScoreTr = goPanelTr.Find("GameOver_Window/HighScore_Text");
+                if (goHighScoreTr != null) gameOverHighScoreText = goHighScoreTr.GetComponent<TextMeshProUGUI>();
+
             }
 
             Transform pPanelTr = canvasGo.transform.Find("Pause_Panel");
@@ -184,20 +193,31 @@ public class GameManager : MonoBehaviour
             }
 
             // wire up buttons
+            // wire up Pause panel buttons — scoped to pPanelTr so it can't collide with
+            // GameOver_Panel's identically-named MainMenu_Button
             Button pauseBtn = FindButtonInHierarchy(canvasGo.transform, "Pause_Button");
             if (pauseBtn != null) { pauseBtn.onClick.RemoveAllListeners(); pauseBtn.onClick.AddListener(TogglePause); }
 
-            Button resumeBtn = FindButtonInHierarchy(canvasGo.transform, "Resume_Button");
-            if (resumeBtn != null) { resumeBtn.onClick.RemoveAllListeners(); resumeBtn.onClick.AddListener(ResumeGame); }
+                if (pPanelTr != null)
+            {
+                Button resumeBtn = FindButtonInHierarchy(pPanelTr, "Resume_Button");
+                if (resumeBtn != null) { resumeBtn.onClick.RemoveAllListeners(); resumeBtn.onClick.AddListener(ResumeGame); }
 
-            Button restartBtn = FindButtonInHierarchy(canvasGo.transform, "Restart_Button");
-            if (restartBtn != null) { restartBtn.onClick.RemoveAllListeners(); restartBtn.onClick.AddListener(RestartGame); }
+                Button pauseMainMenuBtn = FindButtonInHierarchy(pPanelTr, "MainMenu_Button");
+                if (pauseMainMenuBtn != null) { pauseMainMenuBtn.onClick.RemoveAllListeners(); pauseMainMenuBtn.onClick.AddListener(GoToMainMenu); }
+            }
 
-            Button mainMenuBtn = FindButtonInHierarchy(canvasGo.transform, "MainMenu_Button");
-            if (mainMenuBtn != null) { mainMenuBtn.onClick.RemoveAllListeners(); mainMenuBtn.onClick.AddListener(GoToMainMenu); }
-        }
+            // wire up GameOver panel buttons — scoped to goPanelTr, same reasoning
+                if (goPanelTr != null)
+            {
+                Button restartBtn = FindButtonInHierarchy(goPanelTr, "Restart_Button");
+                if (restartBtn != null) { restartBtn.onClick.RemoveAllListeners(); restartBtn.onClick.AddListener(RestartGame); }
 
-        ResetState();
+                Button gameOverMainMenuBtn = FindButtonInHierarchy(goPanelTr, "MainMenu_Button");
+                if (gameOverMainMenuBtn != null) { gameOverMainMenuBtn.onClick.RemoveAllListeners(); gameOverMainMenuBtn.onClick.AddListener(GoToMainMenu); }
+            }        }
+
+                    ResetState();
     }
 
     private Button FindButtonInHierarchy(Transform parent, string name)
@@ -328,11 +348,13 @@ public class GameManager : MonoBehaviour
             PlayerPrefs.Save();
         }
 
-        if (gameOverPanel     != null) gameOverPanel.SetActive(true);
-        if (gameOverTitleText != null) gameOverTitleText.text = reason;
+        if (gameOverPanel         != null) gameOverPanel.SetActive(true);
+        if (gameOverTitleText     != null) gameOverTitleText.text = reason;
+        if (gameOverScoreText     != null) gameOverScoreText.text = "Score: " + totalScore;
+        if (gameOverHighScoreText != null) gameOverHighScoreText.text = "Best: " + highScore;
 
         UpdateAllUI();
-    }
+        }
 
     // toggles pause on/off — safe to bind to a UI button
     public void TogglePause()
