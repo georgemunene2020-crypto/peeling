@@ -846,6 +846,8 @@ MonoBehaviour:
   gameOverPanel: {fileID: 1833011219}
   pausePanel: {fileID: 1833011220}
   gameOverTitleText: {fileID: 0}
+  gameOverScoreText: {fileID: 0}
+  gameOverHighScoreText: {fileID: 0}
 --- !u!4 &1283694337
 Transform:
   m_ObjectHideFlags: 0

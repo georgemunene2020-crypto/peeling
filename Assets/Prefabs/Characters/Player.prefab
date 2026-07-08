@@ -164,11 +164,11 @@ MonoBehaviour:
   laneChangeSpeed: 20
   jumpForce: 7
   swipeThreshold: 50
-  groundCheckPoint: {fileID: 0}
+  groundCheckPoint: {fileID: 108489364687853671}
   groundCheckRadius: 0.2
   groundMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   magnetRadius: 10
   magnetPullSpeed: 15
 --- !u!114 &1651632366180826019
@@ -252,7 +252,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1c9df9c9ccc7372478b175cf161f99da, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1
+      value: -9.91
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1c9df9c9ccc7372478b175cf161f99da, type: 3}
       propertyPath: m_LocalPosition.z
@@ -294,6 +294,10 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 203b166ef80d85e48838a9dba9f94a36, type: 2}
+    - target: {fileID: 5866666021909216657, guid: 1c9df9c9ccc7372478b175cf161f99da, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
